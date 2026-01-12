@@ -267,27 +267,179 @@ hgjgjhgjhgjhgjhgjhgjhgjhgjh
 
             <!-- KOD CSS -->
             <script type="text/plain" id="source-code-css" data-language="css">
-/* WKLEJ TUTAJ SWÓJ KOD CSS */
-.example {
-    color: #333;
-    font-size: 16px;
+* {
+    font-family: Garamond;
+    color: white;
+    box-sizing: border-box;
+}
+
+header {
+    background-color: Indigo;
+    text-align: center;
+    padding: 2px;
+}
+
+main {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+aside {
+    background-color: Indigo;
+    height: 600px;
+}
+
+#srodek {
+    background-color: black;
+    height: 600px;
+    overflow: scroll;
+}
+
+footer {
+    background-color: Indigo;
+    height: 150px;
+    padding: 10px;
+}
+
+@media (min-width: 800px) {
+    aside {
+        width: 20%;
+    }
+    #srodek {
+        width: 60%;
+    }
+}
+
+@media (max-width: 799px) {
+    aside, #srodek {
+        width: 100%;
+    }
+}
+
+.punkty {
+    background-color: Tomato;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+li {
+    padding: 5px;
+}
+
+.gra {
+    display: inline-block;
+    text-align: center;
+    padding: 3px;
+}
+
+input {
+    margin: 10px;
+    color: Indigo;
 }
             </script>
 
             <!-- KOD JAVASCRIPT -->
             <script type="text/plain" id="source-code-javascript" data-language="javascript">
-// WKLEJ TUTAJ SWÓJ KOD JAVASCRIPT
-function example() {
-    console.log("Hello World!");
-}
+-- Zapytanie 1
+SELECT id, nazwa, zdjecie FROM gry;
+
+-- Zapytanie 2
+SELECT nazwa, LEFT(opis, 100), punkty, cena
+FROM gry
+WHERE id = 1;
+
+-- Zapytanie 3
+SELECT nazwa, punkty
+FROM gry
+ORDER BY punkty DESC
+LIMIT 5;
+
+-- Zapytanie 4
+INSERT INTO gry (nazwa, opis, cena, zdjecie, punkty)
+VALUES ('DANE_Z_PLIKU_REKORD_TXT');
             </script>
 
             <!-- KOD PHP -->
             <script type="text/plain" id="source-code-php" data-language="php">
-<?php
-// WKLEJ TUTAJ SWÓJ KOD PHP
-echo "Hello World!";
-?>
+
+
+
+    
+    Gry komputerowe
+    
+
+
+
+
+    Ranking gier komputerowych
+
+
+
+
+
+    Top 5 gier w tym miesiącu
+    
+        {$wiersz['nazwa']} {$wiersz['punkty']}";
+        }
+        ?>
+    
+
+    Nasz sklep
+    Tu kupisz gry
+
+    Stronę wykonał
+    NUMER_ZDAJĄCEGO
+
+
+
+    ";
+        echo "";
+        echo "{$gra['zdjecie']}";
+        echo "";
+    }
+    ?>
+
+
+
+    Dodaj nową grę
+    
+        Nazwa
+        
+
+        Opis
+        
+
+        Cena
+        
+
+        Zdjęcie
+        
+
+        
+    
+
+    
+
+
+
+
+
+    
+        
+        
+    
+
+    {$opis['nazwa']}, {$opis['punkty']} punktów, {$opis['cena']} zł";
+            echo "{$opis['opis']}";
+        }
+    }
+
+    mysqli_close($polaczenie);
+    ?>
+
+
+
+
             </script>
             <!-- ============================================ -->
 
