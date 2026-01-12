@@ -1,0 +1,529 @@
+<!--
+INSTRUKCJA UŻYCIA:
+1. Znajdź w pliku sekcje z kodami:
+   - <script type="text/plain" id="source-code-html"> - dla kodu HTML
+   - <script type="text/plain" id="source-code-css"> - dla kodu CSS
+   - <script type="text/plain" id="source-code-javascript"> - dla kodu JavaScript
+   - <script type="text/plain" id="source-code-php"> - dla kodu PHP
+2. Wklej swój kod między otwierającym a zamykającym znacznikiem <script>
+3. Możesz wkleić kod w znacznikach <code>...</code> lub <pre><code>...</code></pre> - zostanie automatycznie wyciągnięty
+4. Zapisz plik i otwórz w przeglądarce
+5. Kod będzie automatycznie sformatowany i wyświetlony w odpowiedniej sekcji
+6. Ktoś inny może wejść na stronę i skopiować każdy kod osobno przyciskiem "Kopiuj kod"
+7. Jeśli nie wkleisz kodu w danej sekcji, ta sekcja zostanie automatycznie ukryta
+-->
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formatowanie i Kopiowanie Kodu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-section label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .language-select {
+            margin-bottom: 15px;
+        }
+
+        .language-select select {
+            padding: 10px 15px;
+            font-size: 1em;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            width: 200px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-format {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-format:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-copy {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .btn-clear {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-clear:hover {
+            background: #e53e3e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(245, 101, 101, 0.4);
+        }
+
+        .output-section {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .output-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .output-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .code-container {
+            position: relative;
+            background: #1e1e1e;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .code-header {
+            background: #2d2d2d;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+        }
+
+        .code-header span {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+            overflow-x: auto;
+            background: #1e1e1e;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #d4d4d4;
+        }
+
+        .copy-success {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #48bb78;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Syntax highlighting colors */
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+        .operator { color: #d4d4d4; }
+        .tag { color: #569cd6; }
+        .attribute { color: #9cdcfe; }
+        .value { color: #ce9178; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Formatowanie i Kopiowanie Kodu</h1>
+            <p>Kod jest wklejony w pliku HTML - możesz go teraz skopiować</p>
+        </div>
+        
+        <div class="content">
+            <!-- ============================================ -->
+            <!-- WKLEJ TUTAJ SWÓJ KOD W PONIŻSZYCH ZNACZNIKACH -->
+            <!-- Możesz użyć: <code>...</code> lub <pre><code>...</code></pre> -->
+            <!-- ============================================ -->
+            
+            <!-- KOD HTML -->
+            <script type="text/plain" id="source-code-html" data-language="html">
+hgjgjhgjhgjhgjhgjhgjhgjhgjh
+            </script>
+
+            <!-- KOD CSS -->
+            <script type="text/plain" id="source-code-css" data-language="css">
+/* WKLEJ TUTAJ SWÓJ KOD CSS */
+.example {
+    color: #333;
+    font-size: 16px;
+}
+            </script>
+
+            <!-- KOD JAVASCRIPT -->
+            <script type="text/plain" id="source-code-javascript" data-language="javascript">
+// WKLEJ TUTAJ SWÓJ KOD JAVASCRIPT
+function example() {
+    console.log("Hello World!");
+}
+            </script>
+
+            <!-- KOD PHP -->
+            <script type="text/plain" id="source-code-php" data-language="php">
+<?php
+// WKLEJ TUTAJ SWÓJ KOD PHP
+echo "Hello World!";
+?>
+            </script>
+            <!-- ============================================ -->
+
+            <!-- SEKCJA HTML -->
+            <div class="output-section" id="section-html">
+                <h2>📄 Kod HTML</h2>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>HTML</span>
+                        <button class="btn-copy" onclick="copyCode('html')" style="padding: 5px 15px; font-size: 0.9em;">
+                            📋 Kopiuj kod
+                        </button>
+                    </div>
+                    <pre><code id="formattedCode-html">Ładowanie kodu...</code></pre>
+                </div>
+            </div>
+
+            <!-- SEKCJA CSS -->
+            <div class="output-section" id="section-css">
+                <h2>🎨 Kod CSS</h2>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>CSS</span>
+                        <button class="btn-copy" onclick="copyCode('css')" style="padding: 5px 15px; font-size: 0.9em;">
+                            📋 Kopiuj kod
+                        </button>
+                    </div>
+                    <pre><code id="formattedCode-css">Ładowanie kodu...</code></pre>
+                </div>
+            </div>
+
+            <!-- SEKCJA JAVASCRIPT -->
+            <div class="output-section" id="section-javascript">
+                <h2>⚡ Kod JavaScript</h2>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>JAVASCRIPT</span>
+                        <button class="btn-copy" onclick="copyCode('javascript')" style="padding: 5px 15px; font-size: 0.9em;">
+                            📋 Kopiuj kod
+                        </button>
+                    </div>
+                    <pre><code id="formattedCode-javascript">Ładowanie kodu...</code></pre>
+                </div>
+            </div>
+
+            <!-- SEKCJA PHP -->
+            <div class="output-section" id="section-php">
+                <h2>🐘 Kod PHP</h2>
+                <div class="code-container">
+                    <div class="code-header">
+                        <span>PHP</span>
+                        <button class="btn-copy" onclick="copyCode('php')" style="padding: 5px 15px; font-size: 0.9em;">
+                            📋 Kopiuj kod
+                        </button>
+                    </div>
+                    <pre><code id="formattedCode-php">Ładowanie kodu...</code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const codeSections = {
+            'html': { code: '', element: null },
+            'css': { code: '', element: null },
+            'javascript': { code: '', element: null },
+            'php': { code: '', element: null }
+        };
+
+        // Znajdź wszystkie kody przy ładowaniu strony
+        function loadSourceCodes() {
+            const languages = ['html', 'css', 'javascript', 'php'];
+            
+            languages.forEach(lang => {
+                const sourceElement = document.getElementById('source-code-' + lang);
+                const displayElement = document.getElementById('formattedCode-' + lang);
+                const sectionElement = document.getElementById('section-' + lang);
+                
+                if (sourceElement && displayElement) {
+                    let code = sourceElement.textContent || sourceElement.innerText;
+                    
+                    // Wyciągnij kod z znaczników HTML jeśli są
+                    code = extractCodeFromHtml(code);
+                    
+                    // Dekoduj encje HTML jeśli są
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = code;
+                    code = tempDiv.textContent || tempDiv.innerText || code;
+                    
+                    codeSections[lang].code = code;
+                    codeSections[lang].element = displayElement;
+                    
+                    // Wyświetl kod
+                    if (code.trim()) {
+                        const highlighted = highlightCode(code, lang);
+                        displayElement.innerHTML = highlighted;
+                    } else {
+                        displayElement.innerHTML = '<span style="opacity: 0.5;">Brak kodu - wklej kod w znaczniku source-code-' + lang + '</span>';
+                        if (sectionElement) {
+                            sectionElement.style.display = 'none';
+                        }
+                    }
+                } else {
+                    // Ukryj sekcję jeśli nie ma kodu
+                    if (sectionElement) {
+                        sectionElement.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function highlightCode(code, language) {
+            if (language === 'plain') {
+                return escapeHtml(code);
+            }
+
+            let highlighted = escapeHtml(code);
+
+            if (language === 'html') {
+                highlighted = highlighted.replace(/(&lt;\/?)([\w]+)([^&]*?)(&gt;)/g, function(match, open, tag, attrs, close) {
+                    return '<span class="tag">' + escapeHtml(open) + '</span><span class="keyword">' + tag + '</span>' + 
+                           attrs.replace(/(\w+)(=)(".*?"|'.*?')/g, '<span class="attribute">$1</span><span class="operator">$2</span><span class="value">$3</span>') + 
+                           '<span class="tag">' + escapeHtml(close) + '</span>';
+                });
+            } else if (language === 'css') {
+                highlighted = highlighted.replace(/([\w-]+)(\s*)(\{)/g, '<span class="function">$1</span>$2<span class="operator">$3</span>');
+                highlighted = highlighted.replace(/([\w-]+)(\s*)(:)/g, '<span class="attribute">$1</span>$2<span class="operator">$3</span>');
+                highlighted = highlighted.replace(/(:\s*)([^;]+)(;)/g, '$1<span class="value">$2</span><span class="operator">$3</span>');
+            } else if (language === 'javascript') {
+                const keywords = ['function', 'var', 'let', 'const', 'if', 'else', 'for', 'while', 'return', 'true', 'false', 'null', 'undefined', 'new', 'this', 'class', 'extends', 'import', 'export', 'async', 'await'];
+                keywords.forEach(keyword => {
+                    const regex = new RegExp('\\b' + keyword + '\\b', 'g');
+                    highlighted = highlighted.replace(regex, '<span class="keyword">' + keyword + '</span>');
+                });
+                highlighted = highlighted.replace(/(["'`])((?:\\.|(?!\1)[^\\])*?)(\1)/g, '<span class="string">$1$2$3</span>');
+                highlighted = highlighted.replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>');
+                highlighted = highlighted.replace(/(\w+)(\s*\()/g, '<span class="function">$1</span>$2');
+            } else if (language === 'php') {
+                highlighted = highlighted.replace(/(&lt;\?php|\?&gt;)/g, '<span class="tag">$1</span>');
+                const keywords = ['function', 'class', 'if', 'else', 'foreach', 'for', 'while', 'return', 'true', 'false', 'null', 'new', 'public', 'private', 'protected', 'static', 'echo', 'print'];
+                keywords.forEach(keyword => {
+                    const regex = new RegExp('\\b' + keyword + '\\b', 'g');
+                    highlighted = highlighted.replace(regex, '<span class="keyword">' + keyword + '</span>');
+                });
+                highlighted = highlighted.replace(/(["'])((?:\\.|(?!\1)[^\\])*?)(\1)/g, '<span class="string">$1$2$3</span>');
+                highlighted = highlighted.replace(/\$(\w+)/g, '<span class="function">$$1</span>');
+            }
+
+            // Highlight comments
+            if (language === 'javascript' || language === 'css') {
+                highlighted = highlighted.replace(/(\/\/.*)/g, '<span class="comment">$1</span>');
+                highlighted = highlighted.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="comment">$1</span>');
+            } else if (language === 'php') {
+                highlighted = highlighted.replace(/(\/\/.*)/g, '<span class="comment">$1</span>');
+                highlighted = highlighted.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="comment">$1</span>');
+                highlighted = highlighted.replace(/(#.*)/g, '<span class="comment">$1</span>');
+            } else if (language === 'html') {
+                highlighted = highlighted.replace(/(&lt;!--[\s\S]*?--&gt;)/g, '<span class="comment">$1</span>');
+            }
+
+            return highlighted;
+        }
+
+        function extractCodeFromHtml(input) {
+            // Sprawdź czy kod jest w znacznikach HTML
+            const codeMatch = input.match(/<code[^>]*>([\s\S]*?)<\/code>/i);
+            if (codeMatch) {
+                return codeMatch[1];
+            }
+            
+            const preMatch = input.match(/<pre[^>]*>([\s\S]*?)<\/pre>/i);
+            if (preMatch) {
+                // Sprawdź czy jest też <code> wewnątrz <pre>
+                const innerCode = preMatch[1].match(/<code[^>]*>([\s\S]*?)<\/code>/i);
+                if (innerCode) {
+                    return innerCode[1];
+                }
+                return preMatch[1];
+            }
+            
+            // Jeśli nie ma znaczników, zwróć oryginalny tekst
+            return input;
+        }
+
+        function copyCode(language) {
+            const code = codeSections[language]?.code;
+            
+            if (!code || !code.trim()) {
+                showNotification('Brak kodu ' + language.toUpperCase() + ' do skopiowania!', 'error');
+                return;
+            }
+
+            // Copy plain text version
+            navigator.clipboard.writeText(code).then(() => {
+                showNotification('Kod ' + language.toUpperCase() + ' skopiowany do schowka! ✓');
+            }).catch(err => {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                textArea.style.position = 'fixed';
+                textArea.style.opacity = '0';
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    showNotification('Kod ' + language.toUpperCase() + ' skopiowany do schowka! ✓');
+                } catch (err) {
+                    showNotification('Nie udało się skopiować kodu', 'error');
+                }
+                document.body.removeChild(textArea);
+            });
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'copy-success';
+            notification.style.background = type === 'error' ? '#f56565' : '#48bb78';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 2000);
+        }
+
+        // Załaduj wszystkie kody przy starcie strony
+        window.addEventListener('DOMContentLoaded', loadSourceCodes);
+    </script>
+</body>
+</html>

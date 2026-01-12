@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wstaw kod JavaScript</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 1em;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            background: #48bb78;
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.4);
+        }
+
+        .success {
+            background: #48bb78;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Wstaw kod JavaScript</h1>
+            <p>Wklej kod JavaScript i kliknij "Prześlij" - kod zostanie automatycznie wstawiony do index.html</p>
+            <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.9;">⚠️ Wymaga Chrome/Edge i otwarcia pliku przez file:// lub localhost</p>
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <label for="codeInput">Wklej tutaj swój kod JavaScript:</label>
+                <textarea id="codeInput" placeholder="Wklej tutaj swój kod JavaScript..."></textarea>
+                <button onclick="wstawKod()">✨ Prześlij i wstaw do index.html</button>
+                <div class="success" id="success" style="display: none;">✓ Kod został wstawiony do index.html!</div>
+                <div class="success" id="error" style="display: none; background: #f56565;">✗ Wystąpił błąd!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function wstawKod() {
+            const codeInput = document.getElementById('codeInput').value.trim();
+            const successDiv = document.getElementById('success');
+            const errorDiv = document.getElementById('error');
+            
+            successDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            
+            if (!codeInput) {
+                errorDiv.textContent = '✗ Wklej najpierw kod JavaScript!';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            // Sprawdź czy File System Access API jest dostępne
+            if (!window.showOpenFilePicker) {
+                errorDiv.innerHTML = '✗ Twoja przeglądarka nie obsługuje automatycznego zapisu plików.<br>Użyj Chrome lub Edge. Alternatywnie: otwórz plik przez "file://" lub localhost.';
+                errorDiv.style.display = 'block';
+                return;
+            }
+
+            try {
+                // Wyciągnij kod z znaczników HTML jeśli są
+                let cleanCode = codeInput;
+                const codeMatch = codeInput.match(/<code[^>]*>([\s\S]*?)<\/code>/i);
+                if (codeMatch) {
+                    cleanCode = codeMatch[1];
+                } else {
+                    const preMatch = codeInput.match(/<pre[^>]*>([\s\S]*?)<\/pre>/i);
+                    if (preMatch) {
+                        const innerCode = preMatch[1].match(/<code[^>]*>([\s\S]*?)<\/code>/i);
+                        if (innerCode) {
+                            cleanCode = innerCode[1];
+                        } else {
+                            cleanCode = preMatch[1];
+                        }
+                    }
+                }
+
+                // Dekoduj encje HTML
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = cleanCode;
+                cleanCode = tempDiv.textContent || tempDiv.innerText || cleanCode;
+
+                // Otwórz plik index.html
+                let fileHandle;
+                try {
+                    [fileHandle] = await window.showOpenFilePicker({
+                        types: [{
+                            description: 'Pliki HTML',
+                            accept: { 'text/html': ['.html'] }
+                        }],
+                        suggestedName: 'index.html'
+                    });
+                } catch (err) {
+                    if (err.name === 'AbortError') {
+                        return; // Użytkownik anulował
+                    }
+                    throw new Error('Nie można otworzyć pliku. Upewnij się, że otwierasz plik przez "file://" lub localhost.');
+                }
+
+                const file = await fileHandle.getFile();
+                let content = await file.text();
+
+                // Znajdź i zastąp sekcję JavaScript
+                const startTag = '<script type="text/plain" id="source-code-javascript" data-language="javascript">';
+                const endTag = '<\/script>';
+                const startIndex = content.indexOf(startTag);
+                const endIndex = content.indexOf(endTag, startIndex);
+
+                if (startIndex === -1 || endIndex === -1) {
+                    throw new Error('Nie znaleziono sekcji JavaScript w pliku index.html. Upewnij się, że otwierasz właściwy plik.');
+                }
+
+                // Zastąp zawartość
+                const before = content.substring(0, startIndex + startTag.length);
+                const after = content.substring(endIndex);
+                const newContent = before + '\n' + cleanCode + '\n            ' + after;
+
+                // Zapisz plik
+                const writable = await fileHandle.createWritable();
+                await writable.write(newContent);
+                await writable.close();
+
+                successDiv.style.display = 'block';
+                document.getElementById('codeInput').value = '';
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    return; // Użytkownik anulował
+                }
+                errorDiv.innerHTML = '✗ Błąd: ' + error.message + '<br><small>Szczegóły w konsoli (F12)</small>';
+                errorDiv.style.display = 'block';
+                console.error('Szczegóły błędu:', error);
+            }
+        }
+    </script>
+</body>
+</html>
